@@ -18,6 +18,8 @@ import db.category.CategoryDao;
 import db.category.CategoryDaoFactory;
 import db.favorite.FavoriteDao;
 import db.favorite.FavoriteDaoFactory;
+import db.item.ItemDao;
+import db.item.ItemDaoFactory;
 import entity.Item;
 import external.TicketDaoFactory;
 import external.TicketMasterDao;
@@ -32,8 +34,10 @@ public class SearchItem extends HttpServlet {
 	//private static final String URL = "https://app.ticketmaster.com/discovery/v2/events.json?";
 	//private static final String DEDAULT_KEYWORD = "events";
 	private static final TicketMasterDao TICKET_MASTER_DAO = TicketDaoFactory.get();
+	private static final ItemDao ITEM_DAO = ItemDaoFactory.get();
 	private static final FavoriteDao FAVORITE_DAO = FavoriteDaoFactory.get();
 	private static final CategoryDao CATEGORY_DAO = CategoryDaoFactory.get();
+	
 	
 	/**
      * @see HttpServlet#HttpServlet()
@@ -53,6 +57,7 @@ public class SearchItem extends HttpServlet {
 		String user_id = request.getParameter("user_id");
 		
 		List<Item> items = TICKET_MASTER_DAO.search(lat, lon, term);
+		ITEM_DAO.add(items);
 		Set<String> favorites = FAVORITE_DAO.getFavoriteItemIds(user_id);
 		JSONArray array = new JSONArray();
 		for (Item item : items) {

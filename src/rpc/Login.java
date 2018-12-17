@@ -65,7 +65,7 @@ public class Login extends HttpServlet {
 			} else {
 				result.put(STATUS_NAME, STATUS_CODE_FAIL);
 			}
-System.out.println(result);
+
 			WebPrinter.printJSONObject(response, result);
 		} catch (JSONException e) {
 			e.printStackTrace();

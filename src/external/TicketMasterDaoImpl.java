@@ -88,7 +88,6 @@ public class TicketMasterDaoImpl implements TicketMasterDao {
 			Item item = search(itemId);
 			list.add(item);
 		}
-System.out.println("list: " + list);
 		return list;
 	}
 	

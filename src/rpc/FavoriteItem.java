@@ -52,8 +52,7 @@ public class FavoriteItem extends HttpServlet {
 			}
 			array.put(object);
 		}
-System.out.println("List: " + favoriteItems);
-System.out.println("JSON Array: " + array);		
+		
 		WebPrinter.printJSONArray(response, array);
 	}
 

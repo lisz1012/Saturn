@@ -12,11 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 
+import db.favorite.FavoriteDao;
+import db.favorite.FavoriteDaoFactory;
+import db.item.ItemDao;
 import db.recommend.RecommendationDao;
 import db.recommend.RecommendationDaoFactory;
 import entity.Item;
 import external.TicketDaoFactory;
 import external.TicketMasterDao;
+import service.recommend.ItemService;
+import service.recommend.TicketMasterServiceImpl;
 import utils.WebPrinter;
 
 /**
@@ -25,8 +30,9 @@ import utils.WebPrinter;
 @WebServlet("/recommendation")
 public class RecommendationItem extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final TicketMasterDao TICKET_MASTER_DAO_DAO = TicketDaoFactory.get();
+	private static final ItemService ITEM_SERVICE = new TicketMasterServiceImpl();
 	private static final RecommendationDao RECOMMENDATION_DAO = RecommendationDaoFactory.get();
+	private static final FavoriteDao FAVORITE_DAO = FavoriteDaoFactory.get();
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -43,14 +49,16 @@ public class RecommendationItem extends HttpServlet {
 		String userId = request.getParameter("user_id");
 		double lat = Double.parseDouble(request.getParameter("lat"));
 		double lon = Double.parseDouble(request .getParameter("lon"));
-		Set<Item> recommendedItems = new HashSet<>();
 		Set<String> categories = RECOMMENDATION_DAO.getRecommendedCategories(userId);
-		for (String category : categories) {
-			recommendedItems.addAll(TICKET_MASTER_DAO_DAO.search(lat, lon, category));
-		}
+		
+		Set<Item> recommendedItems = ITEM_SERVICE.getItemsFromTicketMaster(lat, lon, categories);
+		Set<String> favoriteIds = FAVORITE_DAO.getFavoriteItemIds(userId);
+		
 		JSONArray array = new JSONArray();
 		for (Item item : recommendedItems) {
-			array.put(item.toJSONObject());
+			if (!favoriteIds.contains(item.getId())) {
+				array.put(item.toJSONObject());
+			}
 		}
 		
 		WebPrinter.printJSONArray(response, array);
