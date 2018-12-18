@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import db.MySQLDBUtil;
+import entity.User;
+import entity.User.UserBuilder;
 
 public class UserDaoImpl implements UserDao {
 
@@ -37,6 +39,33 @@ public class UserDaoImpl implements UserDao {
 		}
 		
 		return 0;
+	}
+
+	
+	@Override
+	public User getUser(String userId, String password) {
+		String sql = "select * from users where user_id = ? and password = ?";
+		UserBuilder userBuilder = new UserBuilder();
+		try (Connection connection = DriverManager.getConnection(MySQLDBUtil.URL);
+			 PreparedStatement ps = connection.prepareStatement(sql)) {
+			
+			ps.setString(1, userId);
+			ps.setString(2, password);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				userBuilder.setId(rs.getString(1))
+						   .setPassword(rs.getString(2))
+						   .setFirstName(rs.getString(3))
+						   .setLastName(rs.getString(4));
+			}
+			rs.close();
+			return userBuilder.build();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return userBuilder.build();
 	}
 
 }

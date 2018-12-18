@@ -11,8 +11,9 @@ import javax.servlet.http.HttpSession;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import service.user.UserLoginValidator;
-import service.user.UserLoginValidatorImpl;
+import db.user.UserDao;
+import db.user.UserDaoFactory;
+import entity.User;
 import utils.WebPrinter;
 
 /**
@@ -25,12 +26,12 @@ public class Login extends HttpServlet {
 	
 	private static final String USER_ID_KEY = "user_id";
 	private static final String PASSWORD_KEY = "password";
+	private static final String FULL_NAME_KEY = "name";
 	private static final String STATUS_CODE_OK = "OK";
 	private static final String STATUS_CODE_FAIL = "FAIL";
 	private static final String STATUS_NAME = "status";
 	
-	// TODO Not good, may need DI.
-	private UserLoginValidator validator = new UserLoginValidatorImpl();
+	private UserDao userDao = UserDaoFactory.get();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -54,14 +55,17 @@ public class Login extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		JSONObject input = WebPrinter.readJSONObject(request);
 		try {
-			String username = input.getString(USER_ID_KEY);
+			String userId = input.getString(USER_ID_KEY);
 			String password = input.getString(PASSWORD_KEY);
 			JSONObject result = new JSONObject();
-			if (validator.validate(username, password)) {
+			User user = null;
+			if ((user = userDao.getUser(userId, password)) != null) {
 				result.put(STATUS_NAME, STATUS_CODE_OK);
+				result.put(USER_ID_KEY, user.getId());
+				result.put(FULL_NAME_KEY, user.getFirstName() + " " + user.getLastName());
 				HttpSession session = request.getSession();
 				session.setMaxInactiveInterval(3600);
-				session.setAttribute(USER_ID_KEY, username);
+				session.setAttribute(USER_ID_KEY, userId);
 			} else {
 				result.put(STATUS_NAME, STATUS_CODE_FAIL);
 			}
