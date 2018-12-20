@@ -45,8 +45,21 @@ public class Login extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		HttpSession session = request.getSession(false);
+		JSONObject result = new JSONObject();
+		try {
+			if (session != null) {
+				result.put(USER_ID_KEY, session.getAttribute(USER_ID_KEY))
+					  .put(FULL_NAME_KEY, session.getAttribute(FULL_NAME_KEY))
+				      .put("status", "OK");
+			} else {
+				result.put("status", "Invalid Session");
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		WebPrinter.printJSONObject(response, result);
 	}
 
 	/**
@@ -60,12 +73,14 @@ public class Login extends HttpServlet {
 			JSONObject result = new JSONObject();
 			User user = null;
 			if ((user = userDao.getUser(userId, password)) != null) {
-				result.put(STATUS_NAME, STATUS_CODE_OK);
-				result.put(USER_ID_KEY, user.getId());
-				result.put(FULL_NAME_KEY, user.getFirstName() + " " + user.getLastName());
 				HttpSession session = request.getSession();
 				session.setMaxInactiveInterval(3600);
 				session.setAttribute(USER_ID_KEY, userId);
+				session.setAttribute(FULL_NAME_KEY, user.getFirstName() + " " + user.getLastName());
+				result.put(STATUS_NAME, STATUS_CODE_OK)
+				      .put(USER_ID_KEY, user.getId())
+					  .put(FULL_NAME_KEY, user.getFirstName() + " " + user.getLastName())
+				      .put("status", "OK");
 			} else {
 				result.put(STATUS_NAME, STATUS_CODE_FAIL);
 			}
