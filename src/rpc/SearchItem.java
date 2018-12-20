@@ -57,6 +57,7 @@ public class SearchItem extends HttpServlet {
 		String user_id = request.getParameter("user_id");
 		
 		List<Item> items = TICKET_MASTER_DAO.search(lat, lon, term);
+		//Must add items first because of the foreign key constraint
 		ITEM_DAO.add(items);
 		Set<String> favorites = FAVORITE_DAO.getFavoriteItemIds(user_id);
 		JSONArray array = new JSONArray();

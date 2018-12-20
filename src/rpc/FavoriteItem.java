@@ -52,7 +52,7 @@ public class FavoriteItem extends HttpServlet {
 			}
 			array.put(object);
 		}
-		
+
 		WebPrinter.printJSONArray(response, array);
 	}
 
