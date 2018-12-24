@@ -29,12 +29,16 @@
     <section class="main-section">
       <div id="login-form">
         <label for="username">Username:</label>
-        <input id="username" name="username" type="text">
+        <input id="username" name="username" type="text" required>
         <label for="password">Password:</label>
-        <input id="password" name="password" type="password">
+        <input id="password" name="password" type="password" required>
         <label for="password">Confirm Password:</label>
-        <input id="confirmed_password" name="confirmed_password" type="password">
-        <button id="login-btn">Login</button>
+        <input id="confirmed_password" name="confirmed_password" type="password" required>
+        <label for="firstName">First Name:</label>
+        <input id="firstName" name="firstName" type="text" required>
+        <label for="lastName">Last Name:</label>
+        <input id="lastName" name="lastName" type="text" required>
+        <button id="login-btn">Sign Up</button>
         <p id="login-error"></p>
       </div>
     </section>
