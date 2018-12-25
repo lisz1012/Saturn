@@ -1,7 +1,6 @@
 package rpc;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -14,12 +13,9 @@ import org.json.JSONArray;
 
 import db.favorite.FavoriteDao;
 import db.favorite.FavoriteDaoFactory;
-import db.item.ItemDao;
 import db.recommend.RecommendationDao;
 import db.recommend.RecommendationDaoFactory;
 import entity.Item;
-import external.TicketDaoFactory;
-import external.TicketMasterDao;
 import service.recommend.ItemService;
 import service.recommend.TicketMasterServiceImpl;
 import utils.WebPrinter;
