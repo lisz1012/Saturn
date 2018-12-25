@@ -41,7 +41,6 @@ public class UserDaoImpl implements UserDao {
 		return 0;
 	}
 
-	
 	@Override
 	public User getUser(String userId, String password) {
 		String sql = "select * from users where user_id = ? and password = ?";
@@ -68,4 +67,47 @@ public class UserDaoImpl implements UserDao {
 		return userBuilder.build();
 	}
 
+	@Override
+	public void add(User user) {
+		// users table schema: user_id, password, first_name, last_name
+		String sql = "insert into users values (?, ?, ?, ?)";
+		try (Connection connection = DriverManager.getConnection(MySQLDBUtil.URL);
+			 PreparedStatement ps = connection.prepareStatement(sql);) {
+			
+			ps.setString(1, user.getId());
+			ps.setString(2, user.getPassword());
+			ps.setString(3, user.getFirstName());
+			ps.setString(4, user.getLastName());
+			
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Override
+	public User getUserById(String userId) {
+		String sql = "select * from users where user_id = ?";
+		UserBuilder userBuilder = new UserBuilder();
+		try (Connection connection = DriverManager.getConnection(MySQLDBUtil.URL);
+			 PreparedStatement ps = connection.prepareStatement(sql)) {
+			
+			ps.setString(1, userId);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				userBuilder.setId(rs.getString(1))
+						   .setPassword(rs.getString(2))
+						   .setFirstName(rs.getString(3))
+						   .setLastName(rs.getString(4));
+			}
+			rs.close();
+			return userBuilder.build();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return userBuilder.build();
+	}
 }

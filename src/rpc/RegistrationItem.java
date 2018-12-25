@@ -7,13 +7,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import entity.User;
+import entity.User.UserBuilder;
+import service.user.UserService;
+import service.user.UserServiceImpl;
+import utils.WebPrinter;
+
 /**
  * Servlet implementation class Register
  */
 @WebServlet("/registration")
 public class RegistrationItem extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+    private UserService userService = new UserServiceImpl();
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -39,9 +48,22 @@ public class RegistrationItem extends HttpServlet {
 		String firstName = request.getParameter("firstName");
 		String lastName = request.getParameter("lastName");
 		
-		System.out.println(user_id + " - " + password + " - " + firstName +  " - " + lastName);
+		UserBuilder builder = new UserBuilder();
+		builder.setId(user_id)
+			   .setPassword(password)
+			   .setFirstName(firstName)
+			   .setLastName(lastName);
 		
+		User user = builder.build();
+		userService.add(user);
 		
+		JSONObject object = new JSONObject();
+		try {
+			object.put("status", "success");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		WebPrinter.printJSONObject(response, object);
 	}
 
 }
