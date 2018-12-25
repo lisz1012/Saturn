@@ -6,22 +6,27 @@ $(document).ready(function(){
     $('#lastName').blur(validateLastName);
     
     $("#username").bind("input propertychange",function(event){
+    	validateUsername();
     	enableSignUpButton();
     });
     
     $("#password").bind("input propertychange",function(event){
+    	validatePassword();
     	enableSignUpButton();
     });
     
     $("#confirmed_password").bind("input propertychange",function(event){
+    	validateConfirmedPassword();
     	enableSignUpButton();
     });
     
     $("#firstName").bind("input propertychange",function(event){
+    	validateFirstName();
     	enableSignUpButton();
     });
     
     $("#lastName").bind("input propertychange",function(event){
+    	validateLastName();
     	enableSignUpButton();
     });
     
