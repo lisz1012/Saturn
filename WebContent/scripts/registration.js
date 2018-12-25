@@ -25,6 +25,8 @@ $(document).ready(function(){
     	enableSignUpButton();
     });
     
+    $('#sign_up-btn').click(register);
+    
 	function validateUsername() {
 		var username = $('#username').val();
 		var isValid = /\w{8,16}/.test(username);
@@ -89,5 +91,29 @@ $(document).ready(function(){
 			$("#sign_up-btn").attr("disabled", "disabled");
 		}
 	}
+	
+	function register() {
+	    var username = $('#username').val();
+	    var password = $('#password').val();
+	    password = md5(username + md5(password));
+	    var firstName = $('#firstName').val();
+	    var lastName = $('#lastName').val();
+	    
+	    var url = './registration';
+	    $.post(
+	         url, 
+	    	 {user_id : username,
+	   	      password : password,
+	   	      firstName : firstName,
+	   	      lastName : lastName,},
+	    	 function(data){
+	    	    if (data.status == "success") {
+	    	    	location.href = "welcome.html";
+	    	    } else {
+	    	    	location.href = "error.html";
+	    	    }
+	    	 }
+	    );
+	  }
 });
 
