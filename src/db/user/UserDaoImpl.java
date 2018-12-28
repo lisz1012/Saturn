@@ -51,20 +51,22 @@ public class UserDaoImpl implements UserDao {
 			ps.setString(1, userId);
 			ps.setString(2, password);
 			ResultSet rs = ps.executeQuery();
+			User result = null;
 			if (rs.next()) {
 				userBuilder.setId(rs.getString(1))
 						   .setPassword(rs.getString(2))
 						   .setFirstName(rs.getString(3))
 						   .setLastName(rs.getString(4));
+				result = userBuilder.build();
 			}
 			rs.close();
-			return userBuilder.build();
+			return result;
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
-		return userBuilder.build();
+		return null;
 	}
 
 	@Override
@@ -108,6 +110,6 @@ public class UserDaoImpl implements UserDao {
 			e.printStackTrace();
 		}
 		
-		return userBuilder.build();
+		return null;
 	}
 }
