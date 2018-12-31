@@ -17,10 +17,6 @@
     document.querySelector('#nearby-btn').addEventListener('click', loadNearbyItems);
     document.querySelector('#fav-btn').addEventListener('click', loadFavoriteItems);
     document.querySelector('#recommend-btn').addEventListener('click', loadRecommendedItems);
-	/*$('#login-btn').click(login);
-	$('#nearby-btn').click(loadNearbyItems);
-	$('#fav-btn').click(loadFavoriteItems);
-	$('#recommend-btn').click(loadRecommendedItems);*/
     validateSession();
     //onSessionValid({"user_id":"1111","name":"John Smith","status":"OK"});
     showSlides();
@@ -148,7 +144,6 @@
 
   function login() {
     var username = document.querySelector('#username').value;
-    alert(username)
     var password = document.querySelector('#password').value;
     password = md5(username + md5(password));
 
